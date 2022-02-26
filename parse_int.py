@@ -1,5 +1,5 @@
 def parse_int(string):
-    string_number = string.split(' ')
+    string_number = string.replace('-', ' ').split(' ')
     int_dict = {
         'zero': 0,
         'one': 1,
@@ -9,7 +9,7 @@ def parse_int(string):
         'five': 5,
         'six': 6,
         'seven': 7,
-        'eigth': 8,
+        'eight': 8,
         'nine': 9,
         'ten': 10,
         'eleven': 11,
@@ -39,12 +39,10 @@ def parse_int(string):
 
         if len(string_number) <= 3:
             for num in string_number:
-                if num.find('-') < 0 and num != 'hundred' and num != 'thousand' and num != 'million':
+                if num != 'hundred' and num != 'thousand' and num != 'million':
                     int_value += int_dict.get(num)
                 elif 'hundred' == num or 'thousand' == num or 'million' == num:
                     int_value *= int_dict.get(num)
-                elif num.find('-') > 0:
-                    int_value += sum([int_dict.get(x) for x in num.split('-')])
         else:
             i, l = 0, len(string_number)
             while i < l:
@@ -55,8 +53,7 @@ def parse_int(string):
                             int_value += int_dict.get(
                                 string_number[i]) * int_dict.get(string_number[i + 1])
                         else:
-                            int_value += sum([int_dict.get(x)
-                                             for x in string_number[i].split('-')])
+                            int_value += int_dict.get(string_number[i])
                             int_value = int_value * \
                                 int_dict.get(string_number[i + 1])
                         i += 2
@@ -64,18 +61,10 @@ def parse_int(string):
                     elif string_number[i] == 'thousand':
                         int_value = int_value * int_dict.get(string_number[i])
                     else:
-                        int_value += sum([int_dict.get(x)
-                                         for x in string_number[i].split('-')])
+                        int_value += int_dict.get(string_number[i])
                 else:
-                    int_value += sum([int_dict.get(x)
-                                     for x in string_number[i].split('-')])
+                    int_value += int_dict.get(string_number[i])
 
                 i += 1
 
     return int_value
-
-
-# test
-print(parse_int('seven hundred eighty-three thousand nine hundred and nineteen'))
-print(parse_int('two hundred forty-six'))
-print(parse_int('forty-one thousand two hundred and nineteen'))
